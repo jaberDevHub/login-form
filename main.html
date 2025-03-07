@@ -1,1 +1,102 @@
-Welcome
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Post with Custom Emoji Reactions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-900">
+
+    <div class="w-[500px] h-[620px] bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <!-- User Info -->
+        <div class="flex items-center p-4">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS78uTnuTZW2-zcyJYQE3H3G-P0yv2Sao1k5g&s" alt="Profile" class="w-10 h-10 rounded-full">
+            <div class="ml-3">
+                <p class="text-white font-semibold">jaber_ahmed</p>
+                <p class="text-gray-400 text-sm">2 hours ago</p>
+            </div>
+        </div>
+
+        <!-- Image Upload -->
+        <input type="file" id="imageUpload" class="hidden">
+        <label for="imageUpload" class="block w-full cursor-pointer">
+            <img id="uploadedImage" src="https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Post Image" class="w-full max-h-[400px] object-cover">
+        </label>
+
+        <!-- Actions -->
+        <div class="flex justify-between items-center p-4 relative">
+            <div class="flex space-x-4">
+                <!-- Reaction Button -->
+                <button id="reactionBtn" class="text-white text-2xl hover:text-red-500">❤️</button>
+
+                <!-- Hidden Emoji Input -->
+                <input type="text" id="emojiInput" class="absolute bottom-full left-0 mb-2 hidden bg-gray-700 text-white p-2 rounded-md text-2xl w-12 text-center" maxlength="2">
+
+                <button class="text-white text-2xl hover:text-blue-400">💬</button>
+                <button class="text-white text-2xl hover:text-green-400">📤</button>
+            </div>
+            <button class="text-white text-2xl hover:text-yellow-400">🔖</button>
+        </div>
+
+        <!-- Like & Caption -->
+        <div class="p-4">
+            <p id="likeCount" class="text-white font-semibold">0 reactions</p>
+            <p class="text-white"><span class="font-semibold">username</span> This is an example caption.</p>
+        </div>
+    </div>
+
+    <script>
+        const reactionBtn = document.getElementById("reactionBtn");
+        const emojiInput = document.getElementById("emojiInput");
+        const likeCount = document.getElementById("likeCount");
+        const imageUpload = document.getElementById("imageUpload");
+        const uploadedImage = document.getElementById("uploadedImage");
+
+        let currentReaction = null;
+        let count = 0;
+
+        // Show emoji input on button click
+        reactionBtn.addEventListener("click", () => {
+            emojiInput.classList.toggle("hidden");
+            emojiInput.focus();
+        });
+
+        // Handle emoji input
+        emojiInput.addEventListener("input", () => {
+            const emoji = emojiInput.value.trim();
+
+            if (emoji.length > 0) {
+                reactionBtn.textContent = emoji;
+                currentReaction = emoji;
+                count = 1;
+                likeCount.textContent = count + " reaction";
+            } else {
+                reactionBtn.textContent = "❤️";
+                currentReaction = null;
+                count = 0;
+                likeCount.textContent = "0 reactions";
+            }
+        });
+
+        // Hide input when losing focus
+        emojiInput.addEventListener("blur", () => {
+            emojiInput.classList.add("hidden");
+        });
+
+        // Handle image upload and auto-adjust size
+        imageUpload.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadedImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+</body>
+</html>
