@@ -21,7 +21,7 @@
         <!-- Image Upload -->
         <input type="file" id="imageUpload" class="hidden">
         <label for="imageUpload" class="block w-full cursor-pointer">
-            <img id="uploadedImage" src="https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Post Image" class="w-full max-h-[400px] object-cover">
+            <img id="uploadedImage" src="" alt="Post Image" class="w-full max-h-[400px] object-cover">
         </label>
 
         <!-- Actions -->
@@ -111,24 +111,18 @@
             }
         });
 
-        // Function to get formatted time
-        function getFormattedTime(date) {
-            let hours = date.getHours();
-            let minutes = date.getMinutes();
-            let ampm = hours >= 12 ? "PM" : "AM";
-            hours = hours % 12 || 12; // Convert to 12-hour format
-            minutes = minutes < 10 ? "0" + minutes : minutes;
+         // Function to format time
+         function getTime() {
+            let hours = new Date().getHours() - 2; // 2 hours ago
+            let minutes = new Date().getMinutes();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
             return `${hours}:${minutes} ${ampm}`;
         }
 
-        // Set post time
-        function updatePostTime() {
-            const postDate = new Date();
-            postDate.setHours(postDate.getHours() - 2); // Simulating "2 hours ago"
-            postTime.innerHTML = `2 hours ago (${getFormattedTime(postDate)})`;
-        }
-
-        updatePostTime();
+        // Update the post time
+        document.getElementById('postTime').textContent = `2 hours ago (${getTime()})`;
     </script>
 
 </body>
