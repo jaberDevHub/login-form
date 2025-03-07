@@ -52,14 +52,31 @@
         const likeCount = document.getElementById("likeCount");
         const imageUpload = document.getElementById("imageUpload");
         const uploadedImage = document.getElementById("uploadedImage");
+        const postTime = document.getElementById("postTime");
 
-        let currentReaction = null;
-        let count = 0;
+        let currentReaction = localStorage.getItem("userReaction") || null;
+        let count = currentReaction ? 1 : 0;
+
+        // Load saved reaction
+        if (currentReaction) {
+            reactionBtn.textContent = currentReaction;
+            likeCount.textContent = "1 reaction";
+        }
 
         // Show emoji input on button click
         reactionBtn.addEventListener("click", () => {
-            emojiInput.classList.toggle("hidden");
-            emojiInput.focus();
+            if (currentReaction) {
+                // Undo reaction
+                reactionBtn.textContent = "❤️";
+                currentReaction = null;
+                count = 0;
+                likeCount.textContent = "0 reactions";
+                localStorage.removeItem("userReaction");
+            } else {
+                // Open emoji input for new reaction
+                emojiInput.classList.toggle("hidden");
+                emojiInput.focus();
+            }
         });
 
         // Handle emoji input
@@ -70,12 +87,9 @@
                 reactionBtn.textContent = emoji;
                 currentReaction = emoji;
                 count = 1;
-                likeCount.textContent = count + " reaction";
-            } else {
-                reactionBtn.textContent = "❤️";
-                currentReaction = null;
-                count = 0;
-                likeCount.textContent = "0 reactions";
+                likeCount.textContent = "1 reaction";
+                localStorage.setItem("userReaction", emoji);
+                emojiInput.classList.add("hidden");
             }
         });
 
@@ -96,6 +110,25 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        // Function to get formatted time
+        function getFormattedTime(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            let ampm = hours >= 12 ? "PM" : "AM";
+            hours = hours % 12 || 12; // Convert to 12-hour format
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            return `${hours}:${minutes} ${ampm}`;
+        }
+
+        // Set post time
+        function updatePostTime() {
+            const postDate = new Date();
+            postDate.setHours(postDate.getHours() - 2); // Simulating "2 hours ago"
+            postTime.innerHTML = `2 hours ago (${getFormattedTime(postDate)})`;
+        }
+
+        updatePostTime();
     </script>
 
 </body>
