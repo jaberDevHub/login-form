@@ -22,7 +22,7 @@ document.getElementById("login").addEventListener("click", function (event) {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       alert("Login successful!");
-      window.location.href = "main.html"; // Redirect to main page
+      window.location.href = "post.html"; // Redirect to main page
     })
     .catch((error) => {
       alert(error.message);

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Box</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="login.js"></script>
 </head>
 <body class="bg-gray-900 flex justify-center items-center min-h-screen">
 
@@ -19,9 +20,14 @@
             <button type="submit" class="w-full p-3 mt-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Post</button>
         </form>
     </div>
+    <div class="w-full max-w-2xl mx-auto py-6">
+        <h2 class="text-3xl text-center mb-6">Your Feed</h2>
+
+        <!-- Feed Display -->
+        <div id="feed" class="space-y-6"></div>
+    </div>
 
     <script>
-        // Handle post submission
         const postForm = document.getElementById("postForm");
         const fileInput = document.getElementById("fileInput");
         const caption = document.getElementById("caption");
@@ -37,41 +43,69 @@
                 return;
             }
 
-            // Create post element
-            const post = document.createElement("div");
-            post.classList.add("bg-gray-700", "rounded-lg", "p-4");
+            // Create a post object
+            const post = {
+                file: URL.createObjectURL(file),
+                caption: captionText,
+                fileType: file.type,
+                time: new Date().toLocaleString()
+            };
 
-            // Handle file preview
+            // Save post in localStorage
+            let posts = JSON.parse(localStorage.getItem("posts")) || [];
+            posts.push(post);
+            localStorage.setItem("posts", JSON.stringify(posts));
+
+            // Redirect to main page
+            window.location.href = "main.html";
+
+            // Clear the form for the next post
+            fileInput.value = "";
+            caption.value = "";
+
+            // Retrieve posts from localStorage
+        const feedContainer = document.getElementById("feed");
+        const posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+        // Render the posts in the feed
+        posts.forEach(post => {
+            const postElement = document.createElement("div");
+            postElement.classList.add("bg-gray-800", "rounded-lg", "p-4");
+
+            // Render the post content based on file type
             let fileElement;
-            if (file.type.startsWith("image/")) {
+            if (post.fileType.startsWith("image/")) {
                 fileElement = document.createElement("img");
-                fileElement.src = URL.createObjectURL(file);
+                fileElement.src = post.file;
                 fileElement.classList.add("w-full", "rounded-lg", "mb-4");
-            } else if (file.type.startsWith("video/")) {
+            } else if (post.fileType.startsWith("video/")) {
                 fileElement = document.createElement("video");
-                fileElement.src = URL.createObjectURL(file);
+                fileElement.src = post.file;
                 fileElement.classList.add("w-full", "rounded-lg", "mb-4");
                 fileElement.controls = true;
-            } else if (file.type === "image/gif") {
+            } else if (post.fileType === "image/gif") {
                 fileElement = document.createElement("img");
-                fileElement.src = URL.createObjectURL(file);
+                fileElement.src = post.file;
                 fileElement.classList.add("w-full", "rounded-lg", "mb-4");
             }
 
             // Caption for the post
             const postCaption = document.createElement("p");
             postCaption.classList.add("text-white");
-            postCaption.textContent = captionText;
+            postCaption.textContent = post.caption;
 
-            // Append the post content (this could be to a specific feed, for simplicity it isn't shown here)
-            // Feed is handled in a different page (main.html)
-            
-            // Redirect to the main page after posting
-            window.location.href = "main.html";
+            // Time for the post
+            const postTime = document.createElement("p");
+            postTime.classList.add("text-gray-400", "text-sm", "mt-2");
+            postTime.textContent = `${post.time} (2 hours ago)`; // Replace this with actual time logic if needed
 
-            // Clear the form for the next post
-            fileInput.value = "";
-            caption.value = "";
+            // Append content to post element
+            postElement.appendChild(fileElement);
+            postElement.appendChild(postCaption);
+            postElement.appendChild(postTime);
+
+            // Append the post to the feed container
+            feedContainer.appendChild(postElement);
         });
     </script>
 </body>
