@@ -3,139 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
+    <title>Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white p-6">
+<body class="bg-gray-900 text-white flex justify-center items-center h-screen">
 
-    <!-- Search Bar -->
-    <div class="max-w-md mx-auto mb-6">
-        <input type="text" placeholder="Search..." class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600">
+    <div class="bg-gray-800 p-6 rounded-lg text-center w-96 shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Your Profile</h2>
+
+        <img id="profile-pic" class="w-24 h-24 object-cover border border-gray-600 mx-auto rounded-full mb-4">
+
+        <p class="text-lg"><strong>Username:</strong> <span id="profile-username"></span></p>
+
+        <button onclick="logout()" class="mt-4 w-full bg-red-600 px-4 py-2 rounded-lg hover:bg-red-700">Logout</button>
     </div>
-
-    <!-- Profile Section -->
-    <div class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-lg text-center relative">
-        <!-- Profile Picture -->
-        <div class="relative inline-block">
-            <img id="profile-pic" src="" class="w-24 h-24 object-cover border border-gray-600 mx-auto cursor-pointer rounded-full">
-        </div>
-
-        <h2 id="profile-name" class="text-2xl font-semibold mt-4"></h2>
-        <p class="text-gray-400">@<span id="profile-username"></span></p>
-
-        <!-- Followers & Following -->
-        <div class="flex justify-center gap-6 mt-4">
-            <div>
-                <p id="followers-count" class="text-xl font-bold">0</p>
-                <p class="text-gray-400 text-sm">Followers</p>
-            </div>
-            <div>
-                <p id="following-count" class="text-xl font-bold">0</p>
-                <p class="text-gray-400 text-sm">Following</p>
-            </div>
-        </div>
-
-        <!-- Follow Button -->
-        <button id="follow-btn" class="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-700" onclick="toggleFollow()">Follow</button>
-    </div>
-
-    <!-- Profile Picture Popup -->
-    <div id="popup" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-        <div class="bg-gray-800 p-4 rounded-lg shadow-lg relative">
-            <span class="absolute top-2 right-2 text-white text-2xl cursor-pointer" onclick="closePopup()">&times;</span>
-            <img id="popup-img" src="https://via.placeholder.com/200" class="w-64 h-64 object-cover rounded-lg">
-        </div>
-    </div>
-
-    <!-- Hidden File Input -->
-    <input type="file" id="file-input" class="hidden" accept="image/*" onchange="updateProfilePic(event)">
 
     <script>
-        function toggleMenu() {
-            document.getElementById("menu").classList.toggle("hidden");
-        }
-    
-        function viewPhoto() {
-            document.getElementById("popup").classList.remove("hidden");
-        }
-    
-        function closePopup() {
-            document.getElementById("popup").classList.add("hidden");
-        }
-    
-        function changePhoto() {
-            document.getElementById("file-input").click();
-        }
-    
-        function updateProfilePic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    let newPic = e.target.result;
-                    document.getElementById("profile-pic").src = newPic;
-                    document.getElementById("popup-img").src = newPic;
-                    localStorage.setItem("profilePic", newPic);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    
-        function toggleFollow() {
-            let followBtn = document.getElementById("follow-btn");
-            let followersCount = document.getElementById("followers-count");
-    
-            let isFollowing = localStorage.getItem("isFollowing") === "true";
-    
-            if (!isFollowing) {
-                followBtn.innerText = "Following";
-                followBtn.classList.replace("bg-blue-600", "bg-gray-600");
-                followersCount.innerText = parseInt(followersCount.innerText) + 1;
-                localStorage.setItem("isFollowing", "true");
-            } else {
-                followBtn.innerText = "Follow";
-                followBtn.classList.replace("bg-gray-600", "bg-blue-600");
-                followersCount.innerText = Math.max(0, parseInt(followersCount.innerText) - 1);
-                localStorage.setItem("isFollowing", "false");
-            }
-        }
-    
         function loadProfile() {
-            let savedUsername = localStorage.getItem("profileUsername") || "User";
-            let savedPic = localStorage.getItem("profilePic") || "https://via.placeholder.com/100";
-            let loggedInUser = localStorage.getItem("loggedInUser") || "User"; // Simulating logged-in user
-    
-            document.getElementById("profile-name").innerText = savedUsername;
-            document.getElementById("profile-username").innerText = "@" + savedUsername;
-            document.getElementById("profile-pic").src = savedPic;
-            document.getElementById("popup-img").src = savedPic;
-    
-            let followBtn = document.getElementById("follow-btn");
-    
-            // ✅ Hide follow button if user is viewing their own profile
-            if (savedUsername === loggedInUser) {
-                followBtn.style.display = "none"; 
-            } else {
-                followBtn.style.display = "block"; 
+            if (localStorage.getItem("isLoggedIn") !== "true") {
+                window.location.href = "login.html";
+                return;
             }
-    
-            let isFollowing = localStorage.getItem("isFollowing") === "true";
-            document.getElementById("followers-count").innerText = isFollowing ? "1" : "0";
-            followBtn.innerText = isFollowing ? "Following" : "Follow";
+
+            document.getElementById("profile-username").textContent = localStorage.getItem("username");
+            document.getElementById("profile-pic").src = localStorage.getItem("profilePic");
         }
-    
-        document.addEventListener("DOMContentLoaded", loadProfile);
-    
-        document.addEventListener("click", function(event) {
-            const menu = document.getElementById("menu");
-            if (!event.target.closest("#profile-pic")) {
-                menu.classList.add("hidden");
-            }
-        });
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }
+
+        loadProfile();
     </script>
-    
-    
-    
 
 </body>
 </html>
