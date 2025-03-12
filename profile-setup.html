@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Setup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex justify-center items-center h-screen">
+
+    <div class="bg-gray-800 p-6 rounded-lg text-center w-96 shadow-lg">
+        <h2 class="text-2xl font-bold mb-4">Set Up Your Profile</h2>
+
+        <!-- Profile Picture Upload -->
+        <div class="relative inline-block mb-4">
+            <img id="preview-pic" src="https://via.placeholder.com/100" class="w-24 h-24 object-cover border border-gray-600 mx-auto rounded-full cursor-pointer" onclick="document.getElementById('file-input').click();">
+            <input type="file" id="file-input" class="hidden" accept="image/*" onchange="previewProfilePic(event)">
+        </div>
+
+        <!-- Username Input -->
+        <input type="text" id="username" placeholder="Enter Username" class="w-full p-2 rounded-lg bg-gray-700 text-white text-center border border-gray-600 mb-4">
+
+        <!-- Create Profile Button -->
+        <button onclick="createProfile()" class="w-full bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">Create Profile</button>
+    </div>
+
+    <script>
+        function previewProfilePic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("preview-pic").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function createProfile() {
+            let username = document.getElementById("username").value;
+            let profilePic = document.getElementById("preview-pic").src;
+
+            if (!username.trim()) {
+                alert("Please enter a username!");
+                return;
+            }
+
+            localStorage.setItem("username", username);
+            localStorage.setItem("profilePic", profilePic);
+
+            window.location.href = "profile.html"; // Redirect to Profile Page
+        }
+    </script>
+
+</body>
+</html>

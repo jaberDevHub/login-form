@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Box</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="login.js"></script>
+    <script src="login.j"></script>
 </head>
 <body class="bg-gray-900 flex justify-center items-center min-h-screen">
 
@@ -63,49 +63,7 @@
             fileInput.value = "";
             caption.value = "";
 
-            // Retrieve posts from localStorage
-        const feedContainer = document.getElementById("feed");
-        const posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-        // Render the posts in the feed
-        posts.forEach(post => {
-            const postElement = document.createElement("div");
-            postElement.classList.add("bg-gray-800", "rounded-lg", "p-4");
-
-            // Render the post content based on file type
-            let fileElement;
-            if (post.fileType.startsWith("image/")) {
-                fileElement = document.createElement("img");
-                fileElement.src = post.file;
-                fileElement.classList.add("w-full", "rounded-lg", "mb-4");
-            } else if (post.fileType.startsWith("video/")) {
-                fileElement = document.createElement("video");
-                fileElement.src = post.file;
-                fileElement.classList.add("w-full", "rounded-lg", "mb-4");
-                fileElement.controls = true;
-            } else if (post.fileType === "image/gif") {
-                fileElement = document.createElement("img");
-                fileElement.src = post.file;
-                fileElement.classList.add("w-full", "rounded-lg", "mb-4");
-            }
-
-            // Caption for the post
-            const postCaption = document.createElement("p");
-            postCaption.classList.add("text-white");
-            postCaption.textContent = post.caption;
-
-            // Time for the post
-            const postTime = document.createElement("p");
-            postTime.classList.add("text-gray-400", "text-sm", "mt-2");
-            postTime.textContent = `${post.time} (2 hours ago)`; // Replace this with actual time logic if needed
-
-            // Append content to post element
-            postElement.appendChild(fileElement);
-            postElement.appendChild(postCaption);
-            postElement.appendChild(postTime);
-
-            // Append the post to the feed container
-            feedContainer.appendChild(postElement);
+            
         });
     </script>
 </body>
