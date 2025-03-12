@@ -22,7 +22,7 @@ document.getElementById("submit").addEventListener("click", function (event) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       alert("Account created successfully!");
-      window.location.href = "post.html"; 
+      window.location.href = "login.js"; 
     })
     .catch((error) => {
       alert(error.message);
