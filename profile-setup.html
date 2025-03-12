@@ -20,12 +20,6 @@
         <!-- Username Input -->
         <input type="text" id="username" placeholder="Enter Username" class="w-full p-2 rounded-lg bg-gray-700 text-white text-center border border-gray-600 mb-4">
 
-        <!-- Email Input -->
-        <input type="email" id="email" placeholder="Enter Email" class="w-full p-2 rounded-lg bg-gray-700 text-white text-center border border-gray-600 mb-4">
-
-        <!-- Password Input -->
-        <input type="password" id="password" placeholder="Enter Password" class="w-full p-2 rounded-lg bg-gray-700 text-white text-center border border-gray-600 mb-4">
-
         <!-- Create Profile Button -->
         <button onclick="createProfile()" class="w-full bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">Create Profile</button>
     </div>
@@ -44,20 +38,15 @@
 
         function createProfile() {
             let username = document.getElementById("username").value;
-            let email = document.getElementById("email").value;
-            let password = document.getElementById("password").value;
             let profilePic = document.getElementById("preview-pic").src;
 
-            if (!username.trim() || !email.trim() || !password.trim()) {
-                alert("All fields are required!");
+            if (!username.trim()) {
+                alert("Please enter a username!");
                 return;
             }
 
             localStorage.setItem("username", username);
-            localStorage.setItem("email", email);
-            localStorage.setItem("password", password);
             localStorage.setItem("profilePic", profilePic);
-            localStorage.setItem("isLoggedIn", "true");
 
             window.location.href = "profile.html"; // Redirect to Profile Page
         }
